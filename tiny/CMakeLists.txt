@@ -1,5 +1,5 @@
 #####################################################################
-# tinyfsm library
+# tinyfsm library #
 #####################################################################
 add_compile_definitions( TINYFSM_NOSTDLIB )
 add_avr_interface_library( tiny )
