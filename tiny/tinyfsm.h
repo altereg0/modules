@@ -38,10 +38,13 @@
 #ifndef TINYFSM_HPP_INCLUDED
 #define TINYFSM_HPP_INCLUDED
 
-#ifndef TINYFSM_NOSTDLIB
+#ifdef TINYFSM_NOSTDLIB
+#ifdef TINYFSM_USE_COLIRU_PATCH
+#include "coliru.h"
+#endif
+#else
 #include <type_traits>
 #endif
-
 // #include <iostream>
 // #define DBG(str) do { std::cerr << str << std::endl; } while( false )
 // DBG("*** dbg_example *** " << __PRETTY_FUNCTION__);
@@ -55,12 +58,17 @@ struct Event {};
 // --------------------------------------------------------------------------
 
 #ifdef TINYFSM_NOSTDLIB
+#ifndef TINYFSM_USE_COLIRU_PATCH
 // remove dependency on standard library (silent fail!).
 // useful in conjunction with -nostdlib option, e.g. if your compiler
 // does not provide a standard library.
 // NOTE: this silently disables all static_assert() calls below!
 template<typename F, typename S>
 struct is_same_fsm { static constexpr bool value = true; };
+#else
+template<typename F, typename S>
+struct is_same_fsm : coliru::is_same< typename F::fsmtype, typename S::fsmtype > { };
+#endif
 #else
 // check if both fsm and state class share same fsmtype
 template<typename F, typename S>
