@@ -14,7 +14,7 @@ add_avr_executable(
 # libraries to link to
 #####################################################################
 avr_target_link_libraries(
-        tiny
+		any
         avrtools
 		tiny
         pt

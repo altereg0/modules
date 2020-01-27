@@ -26,7 +26,7 @@ set(AVR_UPLOADTOOL_PORT usb)
 ##########################################################################
 # AVR and fuses needs to be set
 ##########################################################################
-set(AVR_MCU atmega2560)
+set(AVR_MCU atmega328p)
 set(AVR_MCU_SPEED "16000000UL")
 set(AVR_H_FUSE 0xDF)
 set(AVR_L_FUSE 0xFF)
@@ -83,19 +83,25 @@ add_compile_options(
 #-nostdinc
 #
 
-
+add_link_options(
+        -Wl,-u,vfscanf,-lscanf_flt,-u,vfprintf,-lprintf_flt
+)
 
 ##########################################################################
 # include search paths
 ##########################################################################
+# for example
 #include_directories(c:/avr8/avrtools/AVRTOOLS)
 
 ##########################################################################
 # building library and application in their subdirectories
 ##########################################################################
 add_subdirectory(avrtools)
+add_subdirectory(automaton)
+add_subdirectory(atlib/atlib)
 add_subdirectory(pt)
-add_subdirectory(any)
+add_subdirectory(tiny)
+
 
 add_subdirectory(any)
 

@@ -325,6 +325,21 @@ function( add_avr_executable EXECUTABLE_NAME )
           COMMENT "Uploading ${eeprom_image} to ${AVR_MCU} using ${AVR_PROGRAMMER}"
   )
 
+
+  # upload all - with avrdude
+  # see also bug http://savannah.nongnu.org/bugs/?40142
+  # alter
+  add_custom_target(
+          upload_${EXECUTABLE_NAME}_total
+          ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
+          -U flash:w:${elf_file}:a
+          -U eeprom:w:${eeprom_image}
+          -P ${AVR_UPLOADTOOL_PORT}
+          DEPENDS ${elf_file}
+          DEPENDS ${eeprom_image}
+          COMMENT "Uploading ${elf_file} and ${eeprom_image} to ${AVR_MCU} using ${AVR_PROGRAMMER}"
+  )
+
   # disassemble
   add_custom_target(
           disassemble_${EXECUTABLE_NAME}
@@ -410,7 +425,7 @@ function( avr_target_link_libraries EXECUTABLE_TARGET )
   if ( NOT ARGN )
     message( FATAL_ERROR "Nothing to link to ${EXECUTABLE_TARGET}." )
   else (NOT ARGN)
-    message( STATUS "Call avr_target_link_libraries with ${ARGN}." )
+#    message( STATUS "Call avr_target_link_libraries with ${ARGN}." )
   endif ( NOT ARGN )
 
   get_target_property( TARGET_LIST ${EXECUTABLE_TARGET} OUTPUT_NAME )
@@ -425,9 +440,9 @@ function( avr_target_link_libraries EXECUTABLE_TARGET )
     endif ( TARGET ${TGT} )
   endforeach ( TGT ${ARGN} )
 
-
-  message( ">\tTARGET_LIST ${TARGET_LIST}" )
-  message( ">\tNON_TARGET_LIST ${NON_TARGET_LIST}" )
+  #alter comment this
+  #  message( ">\tTARGET_LIST ${TARGET_LIST}" )
+  #  message( ">\tNON_TARGET_LIST ${NON_TARGET_LIST}" )
   message( ">\tEXECUTABLE ${EXECUTABLE_TARGET}" )
   target_link_libraries( ${TARGET_LIST} ${NON_TARGET_LIST} )
   #    target_link_libraries(${EXECUTABLE_TARGET} ${NON_TARGET_LIST})
@@ -437,14 +452,14 @@ function( avr_target_include_common_directories EXECUTABLE_TARGET TYPE )
   if ( NOT ARGN )
     message( FATAL_ERROR "No include directories to add to ${EXECUTABLE_TARGET}." )
   else (NOT ARGN)
-    message( STATUS "Call avr_target_include_common_directories with ${TYPE} and ${ARGN}." )
+#    message( STATUS "Call avr_target_include_common_directories with ${TYPE} and ${ARGN}." )
   endif ()
 
   get_target_property( TARGET_LIST ${EXECUTABLE_TARGET} OUTPUT_NAME )
   set( extra_args ${ARGN} )
   #alter: add INTERFACE keyword
-  message( ">\tTARGET_LIST ${TARGET_LIST}" )
-  message( ">\tEXECUTABLE ${EXECUTABLE_TARGET}" )
+#  message( ">\tTARGET_LIST ${TARGET_LIST}" )
+#  message( ">\tEXECUTABLE ${EXECUTABLE_TARGET}" )
   target_include_directories( ${TARGET_LIST} ${TYPE} ${extra_args} )
 endfunction()
 ##########################################################################
