@@ -36,11 +36,11 @@ option( CXX_NO_THREAD_SAFE_STATICS "Don't use fread save statics in C++" ON )
 ##########################################################################
 # executables in use
 ##########################################################################
-find_program( AVR_CC avr-gcc PATH d:/DEV/_avr_toolchain)
-find_program( AVR_CXX avr-g++ PATH d:/DEV/_avr_toolchain)
-find_program( AVR_OBJCOPY avr-objcopy PATH d:/DEV/_avr_toolchain/bin)
-find_program( AVR_SIZE_TOOL avr-size PATH d:/DEV/_avr_toolchain/bin)
-find_program( AVR_OBJDUMP avr-objdump PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_CC avr-gcc )
+find_program( AVR_CXX avr-g++ )
+find_program( AVR_OBJCOPY avr-objcopy )
+find_program( AVR_SIZE_TOOL avr-size )
+find_program( AVR_OBJDUMP avr-objdump )
 
 ##########################################################################
 # toolchain starts with defining mandatory variables
