@@ -21,9 +21,16 @@
   Boston, MA  02111-1307  USA
 */
 
+
+#ifdef __cplusplus
 extern "C" {
-  #include "stdlib.h"
+#endif
+
+#include "stdlib.h"
+
+#ifdef __cplusplus
 }
+#endif
 
 void randomSeed(unsigned long seed)
 {

@@ -46,3 +46,6 @@ cmake-build-*
 
 # JetBrains CLion Studio
 .idea
+
+#avrlib
+avrlib

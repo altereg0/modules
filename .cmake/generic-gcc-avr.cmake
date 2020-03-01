@@ -36,11 +36,11 @@ option( CXX_NO_THREAD_SAFE_STATICS "Don't use fread save statics in C++" ON )
 ##########################################################################
 # executables in use
 ##########################################################################
-find_program( AVR_CC avr-gcc )
-find_program( AVR_CXX avr-g++ )
-find_program( AVR_OBJCOPY avr-objcopy )
-find_program( AVR_SIZE_TOOL avr-size )
-find_program( AVR_OBJDUMP avr-objdump )
+find_program( AVR_CC avr-gcc PATH d:/DEV/_avr_toolchain)
+find_program( AVR_CXX avr-g++ PATH d:/DEV/_avr_toolchain)
+find_program( AVR_OBJCOPY avr-objcopy PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_SIZE_TOOL avr-size PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_OBJDUMP avr-objdump PATH d:/DEV/_avr_toolchain/bin)
 
 ##########################################################################
 # toolchain starts with defining mandatory variables
@@ -51,7 +51,7 @@ set( CMAKE_C_COMPILER ${AVR_CC} )
 set( CMAKE_CXX_COMPILER ${AVR_CXX} )
 
 set( CMAKE_C_STANDARD 99 )
-set( CMAKE_CXX_STANDARD 11 )
+set( CMAKE_CXX_STANDARD 17 )
 
 ##########################################################################
 # Identification
@@ -139,26 +139,25 @@ else ( DEFINED ENV{AVR_FIND_ROOT_PATH} )
     set( CMAKE_FIND_ROOT_PATH "/opt/local/avr" )
   elseif ( EXISTS "/usr/avr" )
     set( CMAKE_FIND_ROOT_PATH "/usr/avr" )
-  elseif ( EXISTS "/usr/lib/avr" )
-    set( CMAKE_FIND_ROOT_PATH "/usr/lib/avr" )
-  elseif ( EXISTS "/usr/local/CrossPack-AVR" )
-    set( CMAKE_FIND_ROOT_PATH "/usr/local/CrossPack-AVR" )
+  elseif ( EXISTS "d:/dev/_avr_toolchain" )
+    set( CMAKE_FIND_ROOT_PATH "d:/dev/_avr_toolchain" )
   else ( EXISTS "/opt/local/avr" )
     message( FATAL_ERROR "Please set AVR_FIND_ROOT_PATH in your environment." )
   endif ( EXISTS "/opt/local/avr" )
 endif ( DEFINED ENV{AVR_FIND_ROOT_PATH} )
+
 set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
 set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
 set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
 # not added automatically, since CMAKE_SYSTEM_NAME is "generic"
-set( CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}\\include" )
-set( CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}\\lib" )
+set( CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/avr/include" )
+set( CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}/avr/lib" )
 
 #alter
-if ( NOT DEFINED ${ATMEL_DFP_ROOT_PATH} )
-  set( ATMEL_DFP_ROOT_PATH "c:\\avr8\\Atmel.ATmega_DFP.1.3.300" )
-endif ( NOT DEFINED ${ATMEL_DFP_ROOT_PATH} )
-set( CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_SYSTEM_INCLUDE_PATH} ${ATMEL_DFP_ROOT_PATH}\\include" )
+#if ( NOT DEFINED ${ATMEL_DFP_ROOT_PATH} )
+#  set( ATMEL_DFP_ROOT_PATH "c:/avr8-gnu-toolchain-win32_x86/Atmel.ATmega_DFP.1.4.346" )
+#endif ( NOT DEFINED ${ATMEL_DFP_ROOT_PATH} )
+#set( CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_SYSTEM_INCLUDE_PATH} ${ATMEL_DFP_ROOT_PATH}/include" )
 ##########################################################################
 # status messages for generating
 ##########################################################################
@@ -251,6 +250,7 @@ function( add_avr_executable EXECUTABLE_NAME )
 
   target_link_options(
           ${elf_file} PUBLIC
+#          -mmcu=${AVR_MCU} -Wl,--gc-sections -mrelax -Wl,-Map,${map_file}
           -Wl,-Map,${map_file}
           -Wl,--start-group
           -Wl,-lm
@@ -306,7 +306,7 @@ function( add_avr_executable EXECUTABLE_NAME )
 
   # upload - with avrdude
   add_custom_target(
-          upload_${EXECUTABLE_NAME}
+          ${EXECUTABLE_NAME}_upload
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
           -P ${AVR_UPLOADTOOL_PORT}
           -U flash:w:${elf_file}:a
@@ -317,7 +317,7 @@ function( add_avr_executable EXECUTABLE_NAME )
   # upload eeprom only - with avrdude
   # see also bug http://savannah.nongnu.org/bugs/?40142
   add_custom_target(
-          upload_${EXECUTABLE_NAME}_eeprom
+          ${EXECUTABLE_NAME}_upload_eeprom
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
           -U eeprom:w:${eeprom_image}
           -P ${AVR_UPLOADTOOL_PORT}
@@ -330,7 +330,7 @@ function( add_avr_executable EXECUTABLE_NAME )
   # see also bug http://savannah.nongnu.org/bugs/?40142
   # alter
   add_custom_target(
-          upload_${EXECUTABLE_NAME}_total
+          ${EXECUTABLE_NAME}_upload_total
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
           -U flash:w:${elf_file}:a
           -U eeprom:w:${eeprom_image}
@@ -476,7 +476,7 @@ function( avr_target_compile_definitions EXECUTABLE_TARGET )
   get_target_property( TARGET_LIST ${EXECUTABLE_TARGET} OUTPUT_NAME )
   set( extra_args ${ARGN} )
 
-  target_compile_definitions( ${TARGET_LIST} ${extra_args} )
+  target_compile_definitions( ${TARGET_LIST} PUBLIC ${extra_args} )
 endfunction()
 
 function( avr_generate_fixed_targets )

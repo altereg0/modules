@@ -2,7 +2,6 @@
 
 Atm_bit& Atm_bit::begin( bool initialState /* = false */ ) {
   // clang-format off
-// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*                ON_ENTER    ON_LOOP  ON_EXIT  EVT_ON  EVT_OFF  EVT_TOGGLE EVT_INPUT EVT_REFRESH ELSE */
     /* OFF     */      ENT_OFF, ATM_SLEEP,      -1,     ON,      -1,         ON,      OFF,   REFR_OFF,  -1,
@@ -10,8 +9,7 @@ Atm_bit& Atm_bit::begin( bool initialState /* = false */ ) {
     /* REFR_ON */  ENT_REFR_ON,        -1,      -1,     -1,      -1,         -1,       -1,         -1,  ON,
     /* REFR_OFF*/ ENT_REFR_OFF,        -1,      -1,     -1,      -1,         -1,       -1,         -1, OFF,
   };
-  // @formatter:on
-// clang-format on
+  // clang-format on
   Machine::begin( state_table, ELSE );
   last_state = -1;
   state( initialState ? ON : OFF );

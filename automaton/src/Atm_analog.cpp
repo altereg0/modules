@@ -9,15 +9,13 @@ long map(long, long, long, long, long);
 
 Atm_analog& Atm_analog::begin( GpioPinVariable& attached_pin, int samplerate /* = 50 */ ) {
   // clang-format off
-// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER  EVT_TIMER   ELSE */
     /* IDLE   */          -1,        -1,      -1,          -1,   SAMPLE,    -1,
     /* SAMPLE */  ENT_SAMPLE,        -1,      -1,        SEND,       -1,  IDLE,
     /* SEND   */    ENT_SEND,        -1,      -1,          -1,       -1,  IDLE,
   };
-  // @formatter:on
-// clang-format on
+  // clang-format on
 
   initA2D();
 

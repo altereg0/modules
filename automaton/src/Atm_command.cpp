@@ -5,15 +5,13 @@
 
 Atm_command& Atm_command::begin( Stream& stream, char buffer[], int size ) {
   // clang-format off
-// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*                  ON_ENTER    ON_LOOP    ON_EXIT  EVT_INPUT   EVT_EOL   ELSE */
     /* IDLE     */            -1,        -1,        -1,  READCHAR,       -1,    -1,
     /* READCHAR */  ENT_READCHAR,        -1,        -1,  READCHAR,     SEND,    -1,
     /* SEND     */      ENT_SEND,        -1,        -1,        -1,       -1,  IDLE,
   };
-  // @formatter:on
-// clang-format on
+  // clang-format on
   Machine::begin( state_table, ELSE );
   this->stream = &stream;
   this->buffer = buffer;
