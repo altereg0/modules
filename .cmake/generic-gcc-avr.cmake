@@ -38,9 +38,9 @@ option( CXX_NO_THREAD_SAFE_STATICS "Don't use fread save statics in C++" ON )
 ##########################################################################
 find_program( AVR_CC avr-gcc )
 find_program( AVR_CXX avr-g++ )
-find_program( AVR_OBJCOPY avr-objcopy )
-find_program( AVR_SIZE_TOOL avr-size )
-find_program( AVR_OBJDUMP avr-objdump )
+find_program( AVR_OBJCOPY avr-objcopy PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_SIZE_TOOL avr-size PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_OBJDUMP avr-objdump PATH d:/DEV/_avr_toolchain/bin)
 
 ##########################################################################
 # toolchain starts with defining mandatory variables
@@ -51,8 +51,8 @@ set( CMAKE_C_COMPILER ${AVR_CC} )
 set( CMAKE_CXX_COMPILER ${AVR_CXX} )
 
 set( CMAKE_C_STANDARD 99 )
-set( CMAKE_CXX_STANDARD 17 )
-
+set( CMAKE_CXX_STANDARD 14 )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 ##########################################################################
 # Identification
 ##########################################################################
@@ -262,16 +262,16 @@ function( add_avr_executable EXECUTABLE_NAME )
   add_custom_command(
           OUTPUT ${hex_file}
           COMMAND
-          ${AVR_OBJCOPY} -j .text -j .data -O ihex ${elf_file} ${hex_file}
+          ${AVR_OBJCOPY} -j .text -j .data -O ihex ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file} ${hex_file}
           COMMAND
-          ${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${elf_file}
+          ${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file}
           DEPENDS ${elf_file}
   )
 
   add_custom_command(
           OUTPUT ${lst_file}
           COMMAND
-          ${AVR_OBJDUMP} -d ${elf_file} > ${lst_file}
+          ${AVR_OBJDUMP} -d ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file} > ${lst_file}
           DEPENDS ${elf_file}
   )
 
@@ -281,7 +281,7 @@ function( add_avr_executable EXECUTABLE_NAME )
           COMMAND
           ${AVR_OBJCOPY} -j .eeprom --set-section-flags=.eeprom=alloc,load
           --change-section-lma .eeprom=0 --no-change-warnings
-          -O ihex ${elf_file} ${eeprom_image}
+          -O ihex ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file} ${eeprom_image}
           DEPENDS ${elf_file}
   )
 
@@ -309,7 +309,7 @@ function( add_avr_executable EXECUTABLE_NAME )
           ${EXECUTABLE_NAME}_upload
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
           -P ${AVR_UPLOADTOOL_PORT}
-          -U flash:w:${elf_file}:a
+          -U flash:w:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file}:a
           DEPENDS ${elf_file}
           COMMENT "Uploading ${elf_file} to ${AVR_MCU} using ${AVR_PROGRAMMER}"
   )
@@ -319,7 +319,7 @@ function( add_avr_executable EXECUTABLE_NAME )
   add_custom_target(
           ${EXECUTABLE_NAME}_upload_eeprom
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
-          -U eeprom:w:${eeprom_image}
+          -U eeprom:w:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${eeprom_image}
           -P ${AVR_UPLOADTOOL_PORT}
           DEPENDS ${eeprom_image}
           COMMENT "Uploading ${eeprom_image} to ${AVR_MCU} using ${AVR_PROGRAMMER}"
@@ -332,8 +332,8 @@ function( add_avr_executable EXECUTABLE_NAME )
   add_custom_target(
           ${EXECUTABLE_NAME}_upload_total
           ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
-          -U flash:w:${elf_file}:a
-          -U eeprom:w:${eeprom_image}
+          -U flash:w:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${elf_file}:a
+          -U eeprom:w:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${eeprom_image}
           -P ${AVR_UPLOADTOOL_PORT}
           DEPENDS ${elf_file}
           DEPENDS ${eeprom_image}
