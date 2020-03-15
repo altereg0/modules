@@ -1,5 +1,4 @@
 #include "Atm_led.hpp"
-#include <Pwm.cpp>
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 
@@ -10,7 +9,7 @@ void randomSeed(unsigned long);
 long map(long, long, long, long, long);
 
 
-Atm_led &Atm_led::begin(GpioPinVariable &attached_pin, bool activeLow) {
+Atm_led &Atm_led::begin() {
   // clang-format off
 // @formatter:off
   static const state_t state_table[] PROGMEM = {
@@ -29,8 +28,8 @@ Atm_led &Atm_led::begin(GpioPinVariable &attached_pin, bool activeLow) {
 // clang-format on
 
   Machine::begin( state_table, ELSE );
-  pin = attached_pin;
-  this->activeLow = activeLow;
+//  pin = attached_pin;
+//  this->activeLow = activeLow;
   level  = 255;
   toLow  = 0;
   toHigh = 255;
@@ -181,7 +180,7 @@ Atm_led& Atm_led::pause( uint32_t duration ) {  // Time in which led is fully of
   return *this;
 }
 
-Atm_led& Atm_led::fade( int fade ) {
+Atm_led& Atm_led::fade( UNUSED int fade ) {
   return *this;
 }  // Dummy for method compatibility with Atm_fade
 
@@ -195,7 +194,7 @@ Atm_led& Atm_led::repeat( uint16_t repeat ) {
   return *this;
 }
 
-int Atm_led::brightness( int level /* = -1 */ ) {
+int Atm_led::brightness( UNUSED int level /* = -1 */ ) {
   if ( level > -1 ) {
     this->level = level;
     if ( current == ON || current == START ) {
@@ -237,9 +236,9 @@ Atm_led& Atm_led::trace( Stream& stream ) {
 void Atm_led::initLED() {
 //	pinMode(pin, OUTPUT);
 //	digitalWrite(pin, activeLow ? HIGH : LOW);
-  setGpioPinModeOutputV(pin);
-  writeGpioPinDigitalV(pin, activeLow);
-  initPwmTimer1();
+//  setGpioPinModeOutputV(pin);
+//  writeGpioPinDigitalV(pin, activeLow);
+//  initPwmTimer1();
 }
 
 void Atm_led::switchOn() {
@@ -247,14 +246,14 @@ void Atm_led::switchOn() {
 	if (on_timer.value == 0) return;
 	if (activeLow) {
 //		digitalWrite(pin, LOW);
-        setGpioPinLowV(pin);
+//        setGpioPinLowV(pin);
 	} else {
 		if (level == toHigh) {
 //			digitalWrite(pin, HIGH);
-            setGpioPinHighV(pin);
+//            setGpioPinHighV(pin);
 		} else {
 //			analogWrite(pin, mapLevel(level));
-            writeGpioPinPwmV(pin, mapLevel(level));
+//            writeGpioPinPwmV(pin, mapLevel(level));
 		}
 	}
 }
@@ -262,19 +261,19 @@ void Atm_led::switchOn() {
 void Atm_led::switchOff() {
   if (!activeLow) {
 //    digitalWrite(pin, LOW);
-    setGpioPinLowV(pin);
+//    setGpioPinLowV(pin);
   } else {
     if (level == toHigh) {
 //      digitalWrite(pin, HIGH);
-      setGpioPinHighV(pin);
+//      setGpioPinHighV(pin);
     } else {
 //      analogWrite(pin, mapLevel(level));
-      writeGpioPinPwmV(pin, mapLevel(level));
+//      writeGpioPinPwmV(pin, mapLevel(level));
     }
   }
 }
 
-void Atm_led::setBrightness(int value) {
+void Atm_led::setBrightness( UNUSED int value) {
 //	analogWrite( pin, value );
-  writeGpioPinPwmV(pin, level);
+//  writeGpioPinPwmV(pin, level);
 }

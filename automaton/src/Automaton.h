@@ -80,6 +80,7 @@ class Factory : Automaton {
 #include <atm_timer_millis.hpp>
 #include <atm_counter.hpp>
 #include <atm_serial_debug.hpp>
+#include <atm_fast_helpers.hpp>
 
 // Main framework classes
 

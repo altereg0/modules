@@ -9,7 +9,7 @@ class Atm_led : public Machine {
   enum { EVT_START = EVT_BLINK };
 
   Atm_led( void ) : Machine(){};
-  Atm_led& begin( GpioPinVariable &attached_pin, bool activeLow = false);
+  Atm_led& begin();
   Atm_led& blink( void );
   Atm_led& blink( atm_timer_millis_t duration );
   Atm_led& blink( atm_timer_millis_t duration, atm_timer_millis_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
@@ -49,7 +49,7 @@ class Atm_led : public Machine {
   int event( int id );
   void action( int id );
  protected:
-  GpioPinVariable pin;
+  gpio::FAST_PIN<board::DigitalPin ::NONE> pin;
   bool activeLow;
   uint8_t toHigh, toLow;
   bool wrap;
