@@ -7,5 +7,7 @@ mklink /J tux %MODULES_PATH%\tux
 mklink /J avrlib %MODULES_PATH%\avrlib
 mklink /J fastarduino %MODULES_PATH%\fastduino
 
+copy %MODULES_PATH%\CMakeLists.txt .
+copy %MODULES_PATH%\.gitignore .
 REM echo %MODULES_PATH%\.cmake
 
