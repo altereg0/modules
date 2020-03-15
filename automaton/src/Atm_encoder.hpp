@@ -8,7 +8,7 @@ class Atm_encoder : public Machine {
   enum { EVT_UP, EVT_DOWN, ELSE };  // EVENTS
 
   Atm_encoder( void ) : Machine(){};
-  Atm_encoder& begin( GpioPinVariable& pin1, GpioPinVariable& pin2, int divider = 1 );
+  Atm_encoder& begin( board::DigitalPin pin1, board::DigitalPin pin2, int divider = 1 );
   Atm_encoder& trace( Stream& stream );
   Atm_encoder& onChange( Machine& machine, int event = 0 );
   Atm_encoder& onChange( atm_cb_push_t callback, int idx = 0 );
@@ -20,7 +20,7 @@ class Atm_encoder : public Machine {
 
  private:
   enum { LP_IDLE, ENT_UP, ENT_DOWN };  // ACTIONS
-  GpioPinVariable pin1, pin2;
+  board::DigitalPin pin1, pin2;
   const static char enc_states[];
   uint8_t enc_bits;
   int8_t enc_counter;

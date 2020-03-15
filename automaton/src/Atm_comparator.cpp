@@ -1,6 +1,6 @@
 #include "Atm_comparator.hpp"
 
-Atm_comparator& Atm_comparator::begin(GpioPinVariable& attached_pin, atm_timer_millis_t samplerate /* = 50 */ ) {
+Atm_comparator& Atm_comparator::begin(board::DigitalPin attached_pin, atm_timer_millis_t samplerate /* = 50 */ ) {
   // clang-format off
 // @formatter:off
   const static state_t state_table[] PROGMEM = {
@@ -112,7 +112,9 @@ Atm_comparator& Atm_comparator::skip() {
 
 int Atm_comparator::read_sample() {
   //return analogRead( pin );
-  return readGpioPinDigitalV(pin); //TODO: fix adc read
+//  return readGpioPinDigitalV(pin); //TODO: fix adc read
+//TODO: FIX FAST
+return 0;
 }
 
 int Atm_comparator::avg() {

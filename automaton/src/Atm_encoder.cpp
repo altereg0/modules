@@ -10,7 +10,7 @@ long map(long, long, long, long, long);
 
 const char Atm_encoder::enc_states[16] = {0, (char)-1, 1, 0, 1, 0, 0, (char)-1, (char)-1, 0, 0, 1, 0, 1, (char)-1, 0};
 
-Atm_encoder& Atm_encoder::begin( GpioPinVariable& pin1, GpioPinVariable& pin2, int divider /* = 1 */ ) {
+Atm_encoder& Atm_encoder::begin( board::DigitalPin pin1, board::DigitalPin pin2, int divider /* = 1 */ ) {
   // clang-format off
 // @formatter:off
   const static state_t state_table[] PROGMEM = {

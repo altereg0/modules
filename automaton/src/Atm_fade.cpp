@@ -1,7 +1,7 @@
 #include "Atm_fade.hpp"
 #include <Pwm.h>
 
-Atm_fade& Atm_fade::begin( GpioPinVariable& attached_pin ) {
+Atm_fade& Atm_fade::begin( board::DigitalPin attached_pin ) {
   // clang-format off
 // @formatter:off
   const static state_t state_table[] PROGMEM = {

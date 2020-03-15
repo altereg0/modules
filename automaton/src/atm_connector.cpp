@@ -41,7 +41,7 @@ bool atm_connector::push( int v /* = 0 */, int up /* = 0 */, bool overrideCallba
  *
  */
 
-int atm_connector::pull( int v /* = 0 */, int up /* = 0 */, bool def_value /* = false */ ) {
+int atm_connector::pull( UNUSED int v /* = 0 */, UNUSED int up /* = 0 */, bool def_value /* = false */ ) {
   switch ( mode_flags & 0x07 ) { //0b00000111
     case MODE_PULLCB:
       return ( *extra_.cb_callback_.cb_type_.pull_callback )( extra_.cb_callback_.callback_idx );

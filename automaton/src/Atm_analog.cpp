@@ -1,5 +1,4 @@
 #include "Atm_analog.hpp"
-#include <Analog2Digital.h>
 
 // WMath prototypes
 long random(long);
@@ -7,7 +6,7 @@ long random(long, long);
 void randomSeed(unsigned long);
 long map(long, long, long, long, long);
 
-Atm_analog& Atm_analog::begin( GpioPinVariable& attached_pin, int samplerate /* = 50 */ ) {
+Atm_analog& Atm_analog::begin( board::DigitalPin attached_pin, int samplerate /* = 50 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER  EVT_TIMER   ELSE */
@@ -17,7 +16,8 @@ Atm_analog& Atm_analog::begin( GpioPinVariable& attached_pin, int samplerate /* 
   };
   // clang-format on
 
-  initA2D();
+  //TODO: FIX FAST
+//  initA2D();
 
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
@@ -48,13 +48,13 @@ void Atm_analog::action( int id ) {
   }
 }
 
-Atm_analog& Atm_analog::range( int toLow, int toHigh ) {
-  this->toLow = toLow;
-  this->toHigh = toHigh;
+Atm_analog& Atm_analog::range( int toLow_, int toHigh_ ) {
+  this->toLow = toLow_;
+  this->toHigh = toHigh_;
   return *this;
 }
 
-Atm_analog& Atm_analog::set( int value ) {  // Dummy method
+Atm_analog& Atm_analog::set( __attribute__((unused)) int value ) {  // Dummy method
   return *this;
 }
 
@@ -69,8 +69,10 @@ Atm_analog& Atm_analog::onChange( atm_cb_push_t callback, int idx /* = 0 */ ) {
 }
 
 int Atm_analog::read_sample() {
-  //return analogRead( pin ); //TODO: fix
-  return readA2D(pin.adcNbr());
+  //return analogRead( pin );
+//  return readA2D(pin.adcNbr());
+//TODO: FIX FAST
+  return 0;
 }
 
 int Atm_analog::avg() {

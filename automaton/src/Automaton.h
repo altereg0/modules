@@ -7,12 +7,12 @@
 #define AUTOMATON_H_
 
 #include <avr/pgmspace.h>
-#include <SystemClock.h>
-#include <ArduinoPins.h>
-#include <USART0.h>
+#include <fastarduino/streams.h>
+#include <fastarduino/gpio.h>
 
 typedef int8_t state_t;
-typedef Serial0 Stream;
+typedef streams::ostream Stream;
+typedef uint32_t millis_t;
 
 const uint8_t ATM_SLEEP_FLAG = 0x01; //0b00000001;
 const uint8_t ATM_CYCLE_FLAG = 0x02; //0b00000010;
