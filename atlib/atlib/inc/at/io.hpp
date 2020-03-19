@@ -15,6 +15,23 @@ namespace at {
 #define    INPUT        (0)
 #define    OUTPUT        (1)
 
+/**
+ * Specific GCC attribute to declare an argument or variable unused, so that the
+ * compiler does not emit any warning.
+ *
+ * @code
+ * static void set_mode(UNUSED PinMode mode, UNUSED bool value = false) {}
+ *
+ * FastPin(PinMode mode UNUSED, bool value UNUSED = false) INLINE {}
+ *
+ * static void constraints(T* p)
+ * {
+ *     UNUSED B* pb = p;
+ * }
+ * @endcode
+ */
+#define UNUSED __attribute__((unused))
+
 #ifndef cbi
 # define        cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif

@@ -9,7 +9,7 @@ void randomSeed(unsigned long);
 long map(long, long, long, long, long);
 
 
-Atm_led &Atm_led::begin() {
+Atm_led &Atm_led::begin(UNUSED const board::DigitalPin &attached_pin, bool activeLow_) {
   // clang-format off
 // @formatter:off
   static const state_t state_table[] PROGMEM = {
@@ -28,8 +28,8 @@ Atm_led &Atm_led::begin() {
 // clang-format on
 
   Machine::begin( state_table, ELSE );
-//  pin = attached_pin;
-//  this->activeLow = activeLow;
+//  pin = gpio::FastPinType<board::DigitalPin::NONE>;
+  this->activeLow = activeLow_;
   level  = 255;
   toLow  = 0;
   toHigh = 255;
@@ -45,24 +45,24 @@ Atm_led &Atm_led::begin() {
   return *this;
 }
 
-Atm_led& Atm_led::pwm( uint16_t width, float freq ) {
+Atm_led& Atm_led::pwm(uint16_t width_, float freq_ ) {
 
-    if ( freq > -1 ) {
-		this->freq = freq;
+    if ( freq_ > -1 ) {
+		this->freq = freq_;
 	} else {
-		freq = this->freq;
+      freq_ = this->freq;
 	}
-	this->width = width;
-	float cycle_width = 1000 / freq;
+	this->width = width_;
+	float cycle_width = 1000 / freq_;
 	on_timer.set( cycle_width / 1024 * this->width );
 	off_timer.set( cycle_width / 1024 * ( 1024 - this->width ) );
 	return *this;
 }
 
-Atm_led& Atm_led::frequency( float freq ) {
+Atm_led& Atm_led::frequency( float freq_ ) {
 
-	this->freq = freq;
-	float cycle_width = 1000 / freq;
+	this->freq = freq_;
+	float cycle_width = 1000 / freq_;
 	on_timer.set( cycle_width / 1024 * this->width );
 	off_timer.set( cycle_width / 1024 * ( 1024 - this->width ) );
 	return *this;
@@ -100,11 +100,11 @@ void Atm_led::action( int id ) {
   }
 }
 
-int Atm_led::mapLevel( int level ) {
+int Atm_led::mapLevel( int level_ ) {
   if ( levelMapSize ) {
-    return levelMap[level];
+    return levelMap[level_];
   } else {
-    return map( level, toLow, toHigh, 0, 255 );
+    return map( level_, toLow, toHigh, 0, 255 );
   }
 }
 

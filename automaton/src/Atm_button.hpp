@@ -3,7 +3,6 @@
 
 #include <Automaton.h>
 
-template <board::DigitalPin attached_pin>
 class Atm_button : public Machine {
  public:
   enum { IDLE, WAIT, PRESSED, REPEAT, RELEASE, LIDLE, LWAIT, LPRESSED, LRELEASE, WRELEASE, AUTO_ST };
@@ -11,7 +10,8 @@ class Atm_button : public Machine {
   enum { BTN_PASS4 = -4, BTN_PASS3 = -3, BTN_PASS2 = -2, BTN_PASS1 = -1, BTN_RELEASE = 0, BTN_PRESS1 = 1, BTN_PRESS2 = 2, BTN_PRESS3 = 3, BTN_PRESS4 = 4 };
 
   Atm_button( void ) : Machine(){};
-  Atm_button& begin(){
+
+  Atm_button& begin( const board::DigitalPin &attached_pin){
       // clang-format off
       const static state_t state_table[] PROGMEM = {
           /* Standard Mode: press/repeat */
@@ -31,13 +31,14 @@ class Atm_button : public Machine {
       };
       // clang-format on
       Machine::begin( state_table, ELSE );
+      pin = attached_pin;
       counter_longpress.set( 0 );
       timer_debounce.set( DEBOUNCE );
       timer_delay.set( ATM_TIMER_OFF );
       timer_repeat.set( ATM_TIMER_OFF );
       timer_auto.set( ATM_TIMER_OFF );
       return *this;
-  };
+  }
   Atm_button& trace( Stream& stream ){
     setTrace( &stream, atm_serial_debug::trace,
               "BUTTON\0EVT_LMODE\0EVT_TIMER\0EVT_DELAY\0EVT_REPEAT\0EVT_PRESS\0EVT_RELEASE\0EVT_COUNTER\0EVT_"
@@ -96,8 +97,9 @@ class Atm_button : public Machine {
   static const int DEBOUNCE = 5;
   atm_connector onpress, onrelease;
   atm_connector longpress[2];
-  //  board::DigitalPin pin;
-  gpio::FAST_PIN <attached_pin> pin{gpio::PinMode::INPUT_PULLUP};
+    board::DigitalPin bpin;
+  gpio::FAST_PIN <board::DigitalPin::NONE> pin{gpio::PinMode::INPUT_PULLUP};
+//  gpio::FAST_PIN <board::DigitalPin::NONE> pin{gpio::PinMode::INPUT_PULLUP};
   atm_timer_millis timer_debounce, timer_delay, timer_repeat, timer_auto;
   atm_counter counter_longpress;
   int longpress_max;
