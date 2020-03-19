@@ -3,7 +3,7 @@
 
 #include <Automaton.h>
 
-template <board::DigitalPin attached_pin>
+//template <board::DigitalPin attached_pin>
 class Atm_button : public Machine {
  public:
   enum { IDLE, WAIT, PRESSED, REPEAT, RELEASE, LIDLE, LWAIT, LPRESSED, LRELEASE, WRELEASE, AUTO_ST };
@@ -11,7 +11,7 @@ class Atm_button : public Machine {
   enum { BTN_PASS4 = -4, BTN_PASS3 = -3, BTN_PASS2 = -2, BTN_PASS1 = -1, BTN_RELEASE = 0, BTN_PRESS1 = 1, BTN_PRESS2 = 2, BTN_PRESS3 = 3, BTN_PRESS4 = 4 };
 
   Atm_button( void ) : Machine(){};
-  Atm_button& begin(){
+  Atm_button& begin(const board::DigitalPin &attached_pin){
       // clang-format off
       const static state_t state_table[] PROGMEM = {
           /* Standard Mode: press/repeat */
@@ -32,6 +32,7 @@ class Atm_button : public Machine {
       // clang-format on
       Machine::begin( state_table, ELSE );
       counter_longpress.set( 0 );
+      pin = attached_pin;
       timer_debounce.set( DEBOUNCE );
       timer_delay.set( ATM_TIMER_OFF );
       timer_repeat.set( ATM_TIMER_OFF );
