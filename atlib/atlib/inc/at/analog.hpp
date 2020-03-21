@@ -99,7 +99,7 @@ namespace at {
             return write(_pin, value);
         }
 
-        static void write(uint8_t pin, uint8_t value) {
+        static void write(uint8_t pin, UNUSED uint8_t value) {
 
             mode(pin, OUTPUT); // Make sure the PWM output is enabled for this pin
 

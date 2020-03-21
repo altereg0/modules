@@ -5,7 +5,7 @@
  * Add extra initialization code
  */
 
-Atm_player& Atm_player::begin( GpioPinVariable& pin /* = - 1 */ ) {
+Atm_player& Atm_player::begin( board::DigitalPin pin /* = - 1 */ ) {
   // clang-format off
 // @formatter:off
   const static state_t state_table[] PROGMEM = {

@@ -44,10 +44,10 @@ Automaton& Automaton::run( void ) {
 }
 
 Automaton& Automaton::delay( millis_t time ) {
-  millis_t cycle_start = millis();
+  millis_t cycle_start = time::millis();
   do {
     run();
-  } while ( millis() - cycle_start < time );
+  } while ( time::millis() - cycle_start < time );
   return *this;
 }
 

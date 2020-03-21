@@ -27,11 +27,11 @@ set(AVR_UPLOADTOOL_PORT usb)
 # AVR and fuses needs to be set
 ##########################################################################
 set(AVR_MCU atmega328p)
-set(AVR_MCU_SPEED 16000000UL)
+set(AVR_MCU_SPEED 8000000UL)
 set(AVR_H_FUSE 0xDF)
 set(AVR_L_FUSE 0xFF)
 set(AVR_E_FUSE 0xFC)
-set(AVR_UPLOADTOOL_OPTIONS -B 0.4)
+set(AVR_UPLOADTOOL_OPTIONS "-B 0.4")
 
 ### END TOOLCHAIN SETUP AREA #############################################
 
@@ -40,7 +40,7 @@ include(.cmake/generic-gcc-avr.cmake)
 ##########################################################################
 # name your project
 ##########################################################################
-project(any)
+project(nova)
 
 ##########################################################################
 # status messages
@@ -64,28 +64,29 @@ add_compile_options(
         -mmcu=${AVR_MCU}
         -c
         -Wall
+        -Wextra
         -Wundef
         -Werror
         -pedantic
         -pedantic-errors
-        -fpack-struct
+        #-fpack-struct
         -fshort-enums
+        -mshort-calls
+        #        -mcall-prologues
         -funsigned-char
         -funsigned-bitfields
         -ffunction-sections
         -fdata-sections
-        -mshort-calls
+        -fno-jump-tables
+        -Wno-gnu-zero-variadic-macro-arguments
+        -Wno-variadic-macros
+        -Wno-attributes
 #        -v
 )
-#extra
-#-mcall-prologues
-#-mno-interrupts
-#-nostdinc
-#
 
-add_link_options(
-        -Wl,-u,vfscanf,-lscanf_flt,-u,vfprintf,-lprintf_flt
-)
+#add_link_options(
+#        -Wl,-u,vfscanf,-lscanf_flt,-u,vfprintf,-lprintf_flt
+#)
 
 ##########################################################################
 # include search paths
@@ -96,11 +97,8 @@ add_link_options(
 ##########################################################################
 # building library and application in their subdirectories
 ##########################################################################
-add_subdirectory(avrtools)
 add_subdirectory(automaton)
-add_subdirectory(pt)
-add_subdirectory(tiny)
-add_subdirectory(fastarduino)
+add_subdirectory(fastarduino/cores)
 
 
 add_subdirectory(${PROJECT_NAME})

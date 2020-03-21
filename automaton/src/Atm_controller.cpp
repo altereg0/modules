@@ -36,13 +36,15 @@ void Atm_controller::action( int id ) {
     case ENT_OFF:
       connector[last_state == current ? ON_INPUT_FALSE : ON_CHANGE_FALSE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
-      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
+//      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
+    //TODO: FIX FAST
       last_state = current;
       return;
     case ENT_ON:
       if ( last_state != -1 ) connector[( last_state == current ) ? ON_INPUT_TRUE : ON_CHANGE_TRUE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
-      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
+//      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
+//TODO: FIX FAST
       last_state = current;
       return;
   }
@@ -86,11 +88,12 @@ bool Atm_controller::eval_all() {
   return r;
 }
 
-Atm_controller& Atm_controller::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
+Atm_controller& Atm_controller::led( board::DigitalPin led, bool activeLow /* = false */ ) {
   indicator          = led;
   indicatorActiveLow = activeLow;
 //  pinMode( indicator, OUTPUT );
-  setGpioPinModeOutputV(indicator);
+//  setGpioPinModeOutputV(indicator);
+//TODO: FIX FAST
   return *this;
 }
 
@@ -168,7 +171,7 @@ Atm_controller& Atm_controller::OP( char logOp, Machine& machine, char relOp, in
   return *this;
 }
 
-Atm_controller& Atm_controller::OP( char logOp, atm_cb_pull_t callback, int idx ) {
+Atm_controller& Atm_controller::OP( __attribute__((unused)) char logOp, atm_cb_pull_t callback, int idx ) {
   for ( uint8_t i = 0; i < ATM_CONDITION_OPERAND_MAX; i++ ) {
     if ( operand[i].mode() == atm_connector::MODE_NULL ) {  // Pick the first free slot
       operand[i].set( callback, idx );

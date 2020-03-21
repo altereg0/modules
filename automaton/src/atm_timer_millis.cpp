@@ -15,7 +15,7 @@ void atm_timer_millis::set( atm_timer_millis_t v ) {
  * Sets the timer to be expired v millis from now
  */
 void atm_timer_millis::setFromNow( Machine* machine, atm_timer_millis_t v ) {
-  value = millis() - machine->state_millis + v;
+  value = time::millis() - machine->state_millis + v;
 }
 
 /*
@@ -25,5 +25,5 @@ void atm_timer_millis::setFromNow( Machine* machine, atm_timer_millis_t v ) {
  */
 
 int atm_timer_millis::expired( Machine* machine ) {
-  return value == ATM_TIMER_OFF ? 0 : millis() - machine->state_millis >= value;
+  return value == ATM_TIMER_OFF ? 0 : time::millis() - machine->state_millis >= value;
 }

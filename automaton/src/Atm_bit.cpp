@@ -1,3 +1,4 @@
+#include <fastarduino/gpio.h>
 #include "Atm_bit.hpp"
 
 Atm_bit& Atm_bit::begin( bool initialState /* = false */ ) {
@@ -18,7 +19,7 @@ Atm_bit& Atm_bit::begin( bool initialState /* = false */ ) {
   return *this;
 }
 
-int Atm_bit::event( int id ) {
+int Atm_bit::event( __attribute__((unused)) int id ) {
   return 0;
 }
 
@@ -27,13 +28,15 @@ void Atm_bit::action( int id ) {
     case ENT_OFF:
       if ( last_state != -1 ) connector[last_state == current ? ON_INPUT_FALSE : ON_CHANGE_FALSE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
-      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalLow != !indicatorActiveLow );
+//      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalLow != !indicatorActiveLow );
+  //TODO: FIX FAST
       last_state = current;
       return;
     case ENT_ON:
       if ( last_state != -1 ) connector[last_state == current ? ON_INPUT_TRUE : ON_CHANGE_TRUE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
-    if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalHigh != !indicatorActiveLow );
+//    if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalHigh != !indicatorActiveLow );
+//TODO: FIX FAST
       last_state = current;
       return;
     case ENT_REFR_ON:
@@ -72,10 +75,13 @@ Atm_bit& Atm_bit::refresh( void ) {
   return *this;
 }
 
-Atm_bit& Atm_bit::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
+Atm_bit& Atm_bit::led( board::DigitalPin led, bool activeLow /* = false */ ) {
   indicator          = led;
   indicatorActiveLow = activeLow;
-  setGpioPinModeOutputV(indicator);
+  //TODO: FIX FAST
+//  setGpioPinModeOutputV(indicator);
+
+
   return *this;
 }
 

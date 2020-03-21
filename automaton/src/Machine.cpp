@@ -58,16 +58,16 @@ Machine& Machine::trigger( int evt /* = 0 */ ) {
 }
 
 /*
- * Machine::setTrace( stream, callback, symbols ) - Sets up state tracing for the machine
+ * Machine::setTrace( stream, callback, symbols_ ) - Sets up state tracing for the machine
  *
  * Connects a stream object, a callback (atm_serial_debug) and a symbol table (string) to the object
  *
  */
 
-Machine& Machine::setTrace( Stream* stream, swcb_sym_t callback, const char symbols[] ) {
+Machine& Machine::setTrace( Stream* stream, swcb_sym_t callback, const char symbols_[] ) {
   callback_trace = callback;
   stream_trace = stream;
-  this->symbols = symbols;
+  this->symbols = symbols_;
   return *this;
 }
 
@@ -211,7 +211,7 @@ const char* Machine::mapSymbol( int id, const char map[] ) {
  */
 
 Machine& Machine::cycle( uint32_t time /* = 0 */ ) {
-  uint32_t cycle_start = millis();
+  uint32_t cycle_start = time::millis();
   do {
     if ( ( flags & ( ATM_SLEEP_FLAG | ATM_CYCLE_FLAG ) ) == 0 ) {
       cycles++;
@@ -221,12 +221,12 @@ Machine& Machine::cycle( uint32_t time /* = 0 */ ) {
         if ( callback_trace ) {
           callback_trace( stream_trace, *this, symbols, mapSymbol( current == -1 ? current : current + state_width - ATM_ON_EXIT, symbols ),
                           mapSymbol( next == -1 ? next : next + state_width - ATM_ON_EXIT, symbols ),
-                          mapSymbol( last_trigger == -1 ? -1 : last_trigger + 1, symbols ), millis() - state_millis, cycles );
+                          mapSymbol( last_trigger == -1 ? -1 : last_trigger + 1, symbols ), time::millis() - state_millis, cycles );
         }
         if ( current > -1 ) action( read_state( state_table + ( current * state_width ) + ATM_ON_EXIT ) );
         current = next;
         next = -1;
-        state_millis = millis();
+        state_millis = time::millis();
         action( read_state( state_table + ( current * state_width ) + ATM_ON_ENTER ) );
         if ( read_state( state_table + ( current * state_width ) + ATM_ON_LOOP ) == ATM_SLEEP ) {
           flags |= ATM_SLEEP_FLAG;
@@ -250,6 +250,6 @@ Machine& Machine::cycle( uint32_t time /* = 0 */ ) {
       }
       flags &= ~ATM_CYCLE_FLAG;
     }
-  } while ( millis() - cycle_start < time );
+  } while ( time::millis() - cycle_start < time );
   return *this;
 }

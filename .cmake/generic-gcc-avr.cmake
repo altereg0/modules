@@ -36,8 +36,8 @@ option( CXX_NO_THREAD_SAFE_STATICS "Don't use fread save statics in C++" ON )
 ##########################################################################
 # executables in use
 ##########################################################################
-find_program( AVR_CC avr-gcc )
-find_program( AVR_CXX avr-g++ )
+find_program( AVR_CC avr-gcc PATH d:/DEV/_avr_toolchain/bin)
+find_program( AVR_CXX avr-g++ PATH d:/DEV/_avr_toolchain/bin)
 find_program( AVR_OBJCOPY avr-objcopy PATH d:/DEV/_avr_toolchain/bin)
 find_program( AVR_SIZE_TOOL avr-size PATH d:/DEV/_avr_toolchain/bin)
 find_program( AVR_OBJDUMP avr-objdump PATH d:/DEV/_avr_toolchain/bin)
@@ -51,7 +51,7 @@ set( CMAKE_C_COMPILER ${AVR_CC} )
 set( CMAKE_CXX_COMPILER ${AVR_CXX} )
 
 set( CMAKE_C_STANDARD 99 )
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 ##########################################################################
 # Identification

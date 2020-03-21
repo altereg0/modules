@@ -26,7 +26,7 @@ class Atm_controller : public Machine {
   Atm_controller& OR( atm_cb_pull_t callback, int idx = 0 );
   Atm_controller& XOR( Machine& machine, char relOp = '>', int match = 0 );
   Atm_controller& XOR( atm_cb_pull_t callback, int idx = 0 );
-  Atm_controller& led( GpioPinVariable& led, bool activeLow = false );
+  Atm_controller& led( board::DigitalPin led, bool activeLow = false );
   Atm_controller& trace( Stream& stream );
 
  private:
@@ -35,7 +35,7 @@ class Atm_controller : public Machine {
   state_t           last_state;
   atm_connector     connector[_CONN_SIZE_];
   atm_connector     operand[ATM_CONDITION_OPERAND_MAX];
-  GpioPinVariable   indicator;
+  board::DigitalPin   indicator;
   bool              indicatorActiveLow;
   const static char relOps[];
 
