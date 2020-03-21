@@ -58,16 +58,16 @@ Machine& Machine::trigger( int evt /* = 0 */ ) {
 }
 
 /*
- * Machine::setTrace( stream, callback, symbols ) - Sets up state tracing for the machine
+ * Machine::setTrace( stream, callback, symbols_ ) - Sets up state tracing for the machine
  *
  * Connects a stream object, a callback (atm_serial_debug) and a symbol table (string) to the object
  *
  */
 
-Machine& Machine::setTrace( Stream* stream, swcb_sym_t callback, const char symbols[] ) {
+Machine& Machine::setTrace( Stream* stream, swcb_sym_t callback, const char symbols_[] ) {
   callback_trace = callback;
   stream_trace = stream;
-  this->symbols = symbols;
+  this->symbols = symbols_;
   return *this;
 }
 
